@@ -6,7 +6,7 @@ References:
 https://stackoverflow.com/questions/26561640/django-rest-framework-read-nested-data-write-integer/39362061#39362061
 https://stackoverflow.com/questions/29950956/drf-simple-foreign-key-assignment-with-nested-serializers/33048798#33048798
 
-Best approaches for me are: V4, V8
+Best approaches for me is V9. Because we do not have to send album_id. Both read and write send and receive album field.
 """
 
 
@@ -19,12 +19,20 @@ class SongsSerializer(serializers.ModelSerializer):
 
 
 class AlbumSerializer(serializers.ModelSerializer):
-    """Serializer albums. Send tracks to create them along the album"""
+    """Serializer albums. Send tracks to create them along the album
+
+    Can post something like this:
+    {
+    "name": "Hybrid Theory",
+    "tracks": [ {"name":"In The End"}, {"name":"Crawling"}]
+    }
+
+    """
     tracks = SongsSerializer(many=True)
 
     class Meta:
         model = Album
-        fields = ("name", "tracks")
+        fields = '__all__'
 
     def create(self, validated_data):
         album = Album(nombre=validated_data.get("name"))
@@ -33,6 +41,13 @@ class AlbumSerializer(serializers.ModelSerializer):
         for track in tracks:
             Songs.objects.create(album=album, **track)
         return validated_data
+
+
+class AlbumSerializerFlat(serializers.ModelSerializer):
+    """Serializer albums. Just Album fields"""
+    class Meta:
+        model = Album
+        fields = '__all__'
 
 
 class SongsNestedSerializerV1(serializers.ModelSerializer):
@@ -60,7 +75,6 @@ Difference between SongsNestedSerializerV3 and SongsNestedSerializerV4 is the so
 That is to test if the front must send album_id on V3 or can send just album.
 If must send album_id, that should be fixed with source field.
 """
-
 
 class SongsNestedSerializerV3(serializers.ModelSerializer):
     album_id = serializers.PrimaryKeyRelatedField(
@@ -92,7 +106,20 @@ class SongsNestedSerializerV4(serializers.ModelSerializer):
         depth = 1
 
 
+class SongsNestedSerializerV4_1(serializers.ModelSerializer):
+    class Meta:
+        model = Songs
+        fields = "__all__"
+        depth = 1
+
+    # override the nested item field to PrimaryKeyRelatedField on writes
+    def to_internal_value(self, data):
+        self.fields['album'] = serializers.PrimaryKeyRelatedField(queryset=Album.objects.all())
+        return super().to_internal_value(data)
+
+
 class SongsNestedSerializerV5(serializers.ModelSerializer):
+    """This will expand again tracks into albums becaus of AlbumSerializer."""
     # Output expanded object
     album = AlbumSerializer(read_only=True)
     # Write ID
@@ -106,8 +133,8 @@ class SongsNestedSerializerV5(serializers.ModelSerializer):
         depth = 1
 
 
-# Same as V5 but without depth=1
 class SongsNestedSerializerV6(serializers.ModelSerializer):
+    """Work same as V5 despite there is no depth=1"""
     album = AlbumSerializer(read_only=True)
     album_id = serializers.PrimaryKeyRelatedField(
         read_only=False, queryset=Album.objects.all(), required=False, write_only=True, source='album'
@@ -130,7 +157,24 @@ class SongsNestedSerializerV7(serializers.ModelSerializer):
         self.fields['album'] = AlbumSerializer()
         return super().to_representation(instance)
 
-    # override the nested item field to PrimareKeyRelatedField on writes
+    # override the nested item field to PrimaryKeyRelatedField on writes
+    def to_internal_value(self, data):
+        self.fields['album'] = serializers.PrimaryKeyRelatedField(queryset=Album.objects.all())
+        return super().to_internal_value(data)
+
+
+class SongsNestedSerializerV7Flat(serializers.ModelSerializer):
+    """REF: https://stackoverflow.com/a/39362061/1312850 """
+
+    class Meta:
+        model = Songs
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        self.fields['album'] = AlbumSerializerFlat()
+        return super().to_representation(instance)
+
+    # override the nested item field to PrimaryKeyRelatedField on writes
     def to_internal_value(self, data):
         self.fields['album'] = serializers.PrimaryKeyRelatedField(queryset=Album.objects.all())
         return super().to_internal_value(data)
@@ -187,6 +231,8 @@ class RelatedFieldAlternative(serializers.PrimaryKeyRelatedField):
 
     Make this work with open api generator schema: https://stackoverflow.com/a/63612404/1312850
     Male this work with DRF templates: https://stackoverflow.com/a/64584955/1312850
+
+    If swagger or API schema does not work. Do the 2 fields option.
     """
 
     def __init__(self, **kwargs):
@@ -210,15 +256,24 @@ class SongsNestedSerializerV9(serializers.ModelSerializer):
     album = RelatedFieldAlternative(queryset=Album.objects.all(), serializer=AlbumSerializer)
 
     class Meta:
-        model = Album
+        model = Songs
+        fields = '__all__'
+
+
+class SongsNestedSerializerV9Flat(serializers.ModelSerializer):
+    album = RelatedFieldAlternative(queryset=Album.objects.all(), serializer=AlbumSerializerFlat)
+
+    class Meta:
+        model = Songs
         fields = '__all__'
 
 
 class SongsNestedSerializerV10(serializers.ModelSerializer):
+    # This would work just as a normal PrimaryKeyRelatedField
     album = RelatedFieldAlternative(queryset=Album.objects.all())
 
     class Meta:
-        model = Album
+        model = Songs
         fields = '__all__'
 
 
@@ -245,5 +300,16 @@ class SongsNestedSerializerV11(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = Album
+        model = Songs
+        fields = '__all__'
+
+
+class SongsNestedSerializerV11Flat(serializers.ModelSerializer):
+    album = ModelRepresentationPrimaryKeyRelatedField(
+        queryset=Album.objects.all(),
+        model_serializer_class=AlbumSerializerFlat
+    )
+
+    class Meta:
+        model = Songs
         fields = '__all__'

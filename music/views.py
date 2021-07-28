@@ -32,6 +32,10 @@ class SongsViewSetV4(viewsets.ModelViewSet):
     queryset = Songs.objects.all()
     serializer_class = SongsNestedSerializerV4
 
+class SongsViewSetV4_1(viewsets.ModelViewSet):
+    model = Songs
+    queryset = Songs.objects.all()
+    serializer_class = SongsNestedSerializerV4_1
 
 class SongsViewSetV5(viewsets.ModelViewSet):
     model = Songs
@@ -51,6 +55,12 @@ class SongsViewSetV7(viewsets.ModelViewSet):
     serializer_class = SongsNestedSerializerV7
 
 
+class SongsViewSetV7Flat(viewsets.ModelViewSet):
+    model = Songs
+    queryset = Songs.objects.all()
+    serializer_class = SongsNestedSerializerV7Flat
+
+
 class SongsViewSetV8(viewsets.ModelViewSet):
     model = Songs
     queryset = Songs.objects.all()
@@ -61,6 +71,11 @@ class SongsViewSetV9(viewsets.ModelViewSet):
     model = Songs
     queryset = Songs.objects.all()
     serializer_class = SongsNestedSerializerV9
+
+class SongsViewSetV9Flat(viewsets.ModelViewSet):
+    model = Songs
+    queryset = Songs.objects.all()
+    serializer_class = SongsNestedSerializerV9Flat
 
 
 class SongsViewSetV10(viewsets.ModelViewSet):
@@ -74,3 +89,8 @@ class SongsViewSetV11(viewsets.ModelViewSet):
     queryset = Songs.objects.all()
     serializer_class = SongsNestedSerializerV11
 
+
+class SongsViewSetV11Flat(viewsets.ModelViewSet):
+    model = Songs
+    queryset = Songs.objects.all()
+    serializer_class = SongsNestedSerializerV11Flat
