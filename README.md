@@ -4,6 +4,7 @@ Test different options to implement nested serializers
 # TODO
 
 * Make custom serializers (like version 9 serializer) work with open api schema (see link in serializers field). 
+* Make custom serializers (like version 9 serializer) work with browsable API (see link in serializers field). 
 * If you are using a third party package, for example drf_spectacular see (https://drf-spectacular.readthedocs.io/en/latest/customization.html#step-3-extend-schema-field-and-type-hints)
 * Let post accept a list of ids with custom field. Probably with this is enough:
 ```
