@@ -35,12 +35,11 @@ class AlbumSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        album = Album(nombre=validated_data.get("name"))
-        album.save()
+        album = Album.objects.create(nombre=validated_data.get("name"))
         tracks = validated_data.get('tracks')
         for track in tracks:
             Songs.objects.create(album=album, **track)
-        return validated_data
+        return album
 
 
 class AlbumSerializerFlat(serializers.ModelSerializer):
