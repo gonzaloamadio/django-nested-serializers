@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from drf_writable_nested.serializers import WritableNestedModelSerializer
-from .models import Avatar, AccessKey, Profile, User, Site
+from .models import Avatar, AccessKey, Profile, User, Site, Message
 
 
 class AvatarSerializer(serializers.ModelSerializer):
@@ -26,19 +26,29 @@ class AccessKeySerializer(serializers.ModelSerializer):
         fields = ('pk', 'key',)
 
 
+class MessageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Message
+        fields = ('pk', 'message',)
+
+
 class ProfileSerializer(WritableNestedModelSerializer):
     # Direct ManyToMany relation
-    sites = SiteSerializer(many=True)
+    sites = SiteSerializer(many=True, required=False)
 
     # Reverse FK relation
-    avatars = AvatarSerializer(many=True)
+    avatars = AvatarSerializer(many=True, required=False)
 
     # Direct FK relation
-    access_key = AccessKeySerializer(allow_null=True)
+    access_key = AccessKeySerializer(allow_null=True, required=False)
+
+    # Reverse FK relation with UUID
+    message_set = MessageSerializer(many=True, required=False)
 
     class Meta:
         model = Profile
-        fields = ('pk', 'sites', 'avatars', 'access_key',)
+        fields = ('pk', 'sites', 'avatars', 'access_key', 'message_set',)
 
 
 class UserSerializer(WritableNestedModelSerializer):
