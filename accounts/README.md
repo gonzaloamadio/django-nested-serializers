@@ -232,3 +232,77 @@ PATCH to /users/9/
     "username": "test2"
 }
 ```
+
+# Patch adds or replace?. It replace hole related elements.
+
+Get profile number 4
+
+```text
+{
+    "pk": 4,
+    "sites": [
+        {
+            "pk": 4,
+            "url": "http://new-site2.com"
+        }
+    ],
+    "avatars": [
+        {
+            "pk": 4,
+            "image": "image-1.png"
+        }
+    ],
+    "access_key": {
+        "pk": 4,
+        "key": "key"
+    },
+    "message_set": [
+        {
+            "pk": 1,
+            "message": "Message 1"
+        }
+    ]
+}
+```
+
+Patch /profiles/4/ . (Same if we PUT)
+
+```text
+{
+    "message_set": [
+        {
+            "message": "Message new"
+        }
+    ]
+}
+```
+
+Response. So we have to send hole message set.
+
+```
+{
+    "pk": 4,
+    "sites": [
+        {
+            "pk": 4,
+            "url": "http://new-site2.com"
+        }
+    ],
+    "avatars": [
+        {
+            "pk": 4,
+            "image": "image-1.png"
+        }
+    ],
+    "access_key": {
+        "pk": 4,
+        "key": "key"
+    },
+    "message_set": [
+        {
+            "pk": 4,
+            "message": "Message new"
+        }
+    ]
+}
+```
