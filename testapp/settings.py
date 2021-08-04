@@ -24,7 +24,8 @@ DJANGO_APPS = [
 
 PROJECT_APPS = [
     'music',
-    'accounts'
+    'accounts',
+    'restql',
 ]
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']

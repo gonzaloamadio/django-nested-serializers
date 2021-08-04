@@ -3,6 +3,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from music.views import *
 from accounts.views import *
+from restql.views import *
 
 router = DefaultRouter()
 
@@ -25,11 +26,16 @@ router = DefaultRouter()
 # router.register(r'songsv11flat', SongsViewSetV11Flat)
 
 # Account Routes
-router.register(r'sites', SiteViewSet)
-router.register(r'users', UserViewSet)
-router.register(r'acceskeys', ProfileViewSet)
-router.register(r'avatars', AvatarViewSet)
-router.register(r'profiles', ProfileViewSet)
+# router.register(r'sites', SiteViewSet)
+# router.register(r'users', UserViewSet)
+# router.register(r'acceskeys', ProfileViewSet)
+# router.register(r'avatars', AvatarViewSet)
+# router.register(r'profiles', ProfileViewSet)
+
+# Restql
+router.register(r'ingredients', IngredientViewSet)
+router.register(r'ingredientmixes', IngredientMixViewSet)
+router.register(r'products', ProductViewSet)
 
 
 urlpatterns = [
