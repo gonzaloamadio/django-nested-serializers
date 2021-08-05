@@ -2,6 +2,15 @@
 
 Toy app to test some django-restql bugs.
 
+Package versions used:
+
+```
+Django==3.2.5    (also tested with 3.1)
+django-extensions==3.1.3
+django-restql==0.13.1
+djangorestframework==3.12.4
+```
+
 # First bug (DB integrity error)
 
 Patch a model that has a FK to it. Inside the patch try to create a model that violest a unique constraint on 
@@ -128,6 +137,8 @@ AssertionError: You cannot call `.save()` on a serializer with invalid data.
 # Second Bug (Have to put full object for patching)
 
 The problem is that to do a patch to a model with a nested field serializer, we have to send full object just to modify one field.
+
+Issue link : https://github.com/yezyilomo/django-restql/issues/188
 
 * Get an ingredient mix:
 
