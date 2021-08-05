@@ -127,7 +127,7 @@ AssertionError: You cannot call `.save()` on a serializer with invalid data.
 
 The problem is that to do a patch to a model with a nested field serializer, we have to send full object just to modify one field.
 
-Get an ingredient mix:
+* Get an ingredient mix:
 
 GET {{api}}/ingredientmixes/6/
 ```text
@@ -142,7 +142,7 @@ GET {{api}}/ingredientmixes/6/
 }
 ```
 
-PATCH with all fields:
+* PATCH with all fields:
 
 PATCH {{api}}/ingredientmixes/6/
 ```text
@@ -166,7 +166,7 @@ Response:
 ```
 
 
-PATCH only name
+* PATCH only name
 
 PATCH {{api}}/ingredientmixes/6/
 ```text
