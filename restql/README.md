@@ -9,6 +9,8 @@ the nested model.
 
 Result: Server error.
 
+Issue discussion: https://github.com/yezyilomo/django-restql/issues/211
+
 ## Reproduce bug
 
 Create an ingredient (>>> Ingredient.objects.create(name='ing1'))
