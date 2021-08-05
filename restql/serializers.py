@@ -18,7 +18,7 @@ class IngredientMixSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
     class Meta:
         model = IngredientMix
-        fields = ['id', 'ingredient', 'product']
+        fields = ['id', 'ingredient', 'product', 'name']
 
 
 class ProductSerializer(DynamicFieldsMixin, NestedModelSerializer):

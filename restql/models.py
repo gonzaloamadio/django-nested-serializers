@@ -18,6 +18,7 @@ class Ingredient(models.Model):
 class IngredientMix(models.Model):
     ingredient = models.ForeignKey(Ingredient, null=True, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, null=True, on_delete=models.CASCADE, related_name='ingredient_mixes')
+    name = models.CharField(max_length=100, validators=[validate_dummy], default='')
 
     class Meta:
         unique_together = (('ingredient', 'product'),)
