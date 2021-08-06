@@ -134,7 +134,9 @@ AssertionError: You cannot call `.save()` on a serializer with invalid data.
 ```
 
 
-# Second Bug (Have to put full object for patching)
+# Second Bug (Have to put full object for patching). FIXED
+
+SOLUTION: Problem was the IngredientMixSerializer was not inheriting from NestedModelSerializer
 
 The problem is that to do a patch to a model with a nested field serializer, we have to send full object just to modify one field.
 

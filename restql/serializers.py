@@ -12,7 +12,7 @@ class IngredientSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
-class IngredientMixSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+class IngredientMixSerializer(DynamicFieldsMixin, NestedModelSerializer):
 
     ingredient = NestedField(IngredientSerializer, accept_pk_only=True)
 
